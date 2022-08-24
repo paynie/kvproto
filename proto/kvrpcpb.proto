@@ -1084,6 +1084,20 @@ message RawGetKeyTTLResponse {
     bool not_found = 4;
 }
 
+message RawSetKeyTTLRequest {
+    Context context = 1;
+    bytes key = 2;
+    string cf = 3;
+    uint64 ttl = 4;
+    bool for_cas = 5;
+}
+
+message RawSetKeyTTLResponse {
+    errorpb.Error region_error = 1;
+    string error = 2;
+    bool not_found = 3;
+}
+
 message RawCASRequest {
     Context context = 1;
     bytes key = 2;
