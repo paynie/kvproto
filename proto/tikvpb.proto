@@ -49,6 +49,10 @@ service Tikv {
     rpc RawBatchScan(kvrpcpb.RawBatchScanRequest) returns (kvrpcpb.RawBatchScanResponse) {}
     // Get TTL of the key. Returns 0 if TTL is not set for the key.
     rpc RawGetKeyTTL(kvrpcpb.RawGetKeyTTLRequest) returns (kvrpcpb.RawGetKeyTTLResponse) {}
+    
+    // Get TTL of the key. Returns 0 if TTL is not set for the key.
+    rpc RawSetKeyTTL(kvrpcpb.RawSetKeyTTLRequest) returns (kvrpcpb.RawSetKeyTTLResponse) {}
+
     // Compare if the value in database equals to `RawCASRequest.previous_value` before putting the new value. If not, this request will have no effect and the value in the database will be returned.
     rpc RawCompareAndSwap(kvrpcpb.RawCASRequest) returns (kvrpcpb.RawCASResponse) {}
     rpc RawChecksum(kvrpcpb.RawChecksumRequest) returns (kvrpcpb.RawChecksumResponse) {}
@@ -110,6 +114,8 @@ service Tikv {
     /// TODO: Currently this RPC is designed to be only compatible with TiFlash.
     /// Shall be move out in https://github.com/pingcap/kvproto/issues/912
     rpc Compact(kvrpcpb.CompactRequest) returns (kvrpcpb.CompactResponse);
+    /// Get the information about history lock waiting from TiKV.
+    rpc GetLockWaitHistory(kvrpcpb.GetLockWaitHistoryRequest) returns (kvrpcpb.GetLockWaitHistoryResponse);
 }
 
 message BatchCommandsRequest {
