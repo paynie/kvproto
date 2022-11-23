@@ -187,6 +187,9 @@ message BackupRequest {
     int32 compression_level = 13;
     // The cipher_info is Used to encrypt sst
     CipherInfo cipher_info = 14;
+
+    // Batch size
+    uint32 batch_size = 15;
 }
 
 message StorageBackend {
