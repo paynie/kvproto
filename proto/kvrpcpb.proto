@@ -481,6 +481,25 @@ message RawBatchPutResponse {
     string error = 2;
 }
 
+message RawBatchWriteRequest {
+    Context context = 1;
+    repeated WriteOp batch = 2;
+    string cf = 3;
+    uint64 ttl = 4 [deprecated=true];
+    bool for_cas = 5;
+
+    // The time-to-live for each keys in seconds, and if the length of `ttls`
+    // is exactly one, the ttl will be applied to all keys. Otherwise, the length
+    // mismatch between `ttls` and `pairs` will return an error.
+    repeated uint64 ttls = 6;
+}
+
+message RawBatchWriteResponse {
+    errorpb.Error region_error = 1;
+    string error = 2;
+}
+
+
 message RawDeleteRequest {
     Context context = 1;
     bytes key = 2;
@@ -944,6 +963,13 @@ message KvPair {
     KeyError error = 1;
     bytes key = 2;
     bytes value = 3;
+}
+
+message WriteOp {
+    KeyError error = 1;
+    bytes key = 2;
+    bytes value = 3;
+    Op op = 4;
 }
 
 enum Op {
