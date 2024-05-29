@@ -347,6 +347,9 @@ message BackupRequest {
     // this unique id is help to find the state effictively.
     string unique_id = 19;
     kvrpcpb.Context context = 20;
+
+  // Just for graph
+  map<string, string> params = 21;
 }
 
 message StreamBackupTaskInfo {
