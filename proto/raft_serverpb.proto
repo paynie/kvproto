@@ -96,6 +96,7 @@ message TabletSnapshotFileChunk {
     // Initial vector if encryption is enabled.
     bytes iv = 4;
     encryptionpb.DataKey key = 5;
+    string sub_dir = 6;
 }
 
 message TabletSnapshotHead {
