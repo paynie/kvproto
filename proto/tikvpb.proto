@@ -245,7 +245,7 @@ message BatchCommandsResponse {
             
             kvrpcpb.FlushResponse Flush = 37;
             kvrpcpb.BufferBatchGetResponse BufferBatchGet = 38;
-            kvrpcpb.RawCountRequest RawCount = 39;
+            kvrpcpb.RawCountResponse RawCount = 39;
 
             // For some test cases.
             BatchCommandsEmptyResponse Empty = 255;
