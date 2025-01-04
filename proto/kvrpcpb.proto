@@ -693,12 +693,9 @@ message RawScanResponse {
 
 message RawCountRequest {
     Context context = 1;
-    bytes start_key = 2;
-    uint32 limit = 3;
+    repeated KeyRange ranges = 2; // scanning range
+    uint32 each_limit = 3; // max number of returning kv pairs for each scanning range
     string cf = 4;
-    // For compatibility, when scanning forward, the range to scan is [start_key, end_key), where start_key < end_key;
-    // and when scanning backward, it scans [end_key, start_key) in descending order, where end_key < start_key.
-    bytes end_key = 5;
 }
 
 message RawCountResponse {
