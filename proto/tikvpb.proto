@@ -186,6 +186,7 @@ message BatchCommandsRequest {
             kvrpcpb.PrepareFlashbackToVersionRequest PrepareFlashbackToVersion = 36;
             kvrpcpb.FlushRequest Flush = 37;
             kvrpcpb.BufferBatchGetRequest BufferBatchGet = 38;
+            kvrpcpb.RawCountRequest RawCount = 39;
 
             // For some test cases.
             BatchCommandsEmptyRequest Empty = 255;
@@ -244,6 +245,7 @@ message BatchCommandsResponse {
             
             kvrpcpb.FlushResponse Flush = 37;
             kvrpcpb.BufferBatchGetResponse BufferBatchGet = 38;
+            kvrpcpb.RawCountRequest RawCount = 39;
 
             // For some test cases.
             BatchCommandsEmptyResponse Empty = 255;
