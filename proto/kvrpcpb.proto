@@ -700,7 +700,7 @@ message RawCountRequest {
 
 message RawCountResponse {
     errorpb.Error region_error = 1;
-    repeated int64 count = 2;
+    int64 count = 2;
 }
 
 message RawDeleteRangeRequest {
