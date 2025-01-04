@@ -691,6 +691,21 @@ message RawScanResponse {
     repeated KvPair kvs = 2;
 }
 
+message RawCountRequest {
+    Context context = 1;
+    bytes start_key = 2;
+    uint32 limit = 3;
+    string cf = 4;
+    // For compatibility, when scanning forward, the range to scan is [start_key, end_key), where start_key < end_key;
+    // and when scanning backward, it scans [end_key, start_key) in descending order, where end_key < start_key.
+    bytes end_key = 5;
+}
+
+message RawCountResponse {
+    errorpb.Error region_error = 1;
+    repeated int64 count = 2;
+}
+
 message RawDeleteRangeRequest {
     Context context = 1;
     bytes start_key = 2;
