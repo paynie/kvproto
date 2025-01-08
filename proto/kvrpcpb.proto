@@ -714,6 +714,7 @@ message RawCountResponseV2 {
     errorpb.Error region_error = 1;
     int64 count = 2;
     bytes last_key = 3;
+    string error = 4;
 }
 
 message RawDeleteRangeRequest {
