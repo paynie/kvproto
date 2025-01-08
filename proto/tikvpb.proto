@@ -52,6 +52,8 @@ service Tikv {
     rpc RawBatchDelete(kvrpcpb.RawBatchDeleteRequest) returns (kvrpcpb.RawBatchDeleteResponse) {}
     rpc RawScan(kvrpcpb.RawScanRequest) returns (kvrpcpb.RawScanResponse) {}
     rpc RawCount(kvrpcpb.RawCountRequest) returns (kvrpcpb.RawCountResponse) {}
+    rpc RawCountV2(kvrpcpb.RawCountRequestV2) returns (kvrpcpb.RawCountResponseV2) {}
+
     rpc RawDeleteRange(kvrpcpb.RawDeleteRangeRequest) returns (kvrpcpb.RawDeleteRangeResponse) {}
     rpc RawBatchScan(kvrpcpb.RawBatchScanRequest) returns (kvrpcpb.RawBatchScanResponse) {}
     // Get TTL of the key. Returns 0 if TTL is not set for the key.
@@ -187,6 +189,7 @@ message BatchCommandsRequest {
             kvrpcpb.FlushRequest Flush = 37;
             kvrpcpb.BufferBatchGetRequest BufferBatchGet = 38;
             kvrpcpb.RawCountRequest RawCount = 39;
+            kvrpcpb.RawCountRequestV2 RawCountV2 = 40;
 
             // For some test cases.
             BatchCommandsEmptyRequest Empty = 255;
@@ -246,6 +249,7 @@ message BatchCommandsResponse {
             kvrpcpb.FlushResponse Flush = 37;
             kvrpcpb.BufferBatchGetResponse BufferBatchGet = 38;
             kvrpcpb.RawCountResponse RawCount = 39;
+            kvrpcpb.RawCountResponseV2 RawCountV2 = 40;
 
             // For some test cases.
             BatchCommandsEmptyResponse Empty = 255;
