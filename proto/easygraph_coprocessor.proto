@@ -1,0 +1,37 @@
+syntax = "proto3";
+package com.tencent.easygraph.coprocessor;
+import "kvrpcpb.proto";
+
+// Request type
+enum RequestType {
+  COUNT = 0;
+  PAGINATION = 1;
+}
+
+message CountRequest {
+
+}
+
+message CountResponse {
+  int64 counter = 1;
+}
+
+message CountRequestV2 {
+  int32 limit = 1;
+}
+
+message CountResponseV2 {
+  int64 counter = 1;
+  bytes lastKey = 2;
+  string error = 3;
+}
+
+message PaginationRequest {
+  int64 offset = 1;
+  int64 limit = 2;
+}
+
+message PaginationResponse {
+  repeated KvPair kvs = 1;
+  string error = 2;
+}
