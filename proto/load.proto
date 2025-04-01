@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package com.tencent.easygraph.proto;
+import "google/protobuf/any.proto";
+import "graph_rpc.proto";
+
+option java_multiple_files = true;
+
+enum DataSourceType {
+  TDW = 0;
+  CSV = 1;
+  HIVE = 2;
+  JDBC = 3;
+  JSON = 4;
+}
+
+message DataSource {
+  DataSourceType source_type = 1;
+  oneof oneof_source {
+    TdwSource tdw_source = 4;
+    CsvSource csv_source = 5;
+    HiveSource hive_source = 6;
+    JdbcSource jdbc_source = 7;
+    JsonSource json_source = 8;
+  }
+  bool extract = 9;
+}
+
+message JdbcSource {
+  map<string, string> mapping = 1;
+  string  url = 2;
+  string user = 3;
+  string password = 4;
+  string driver = 5;
+  string sql = 6;
+}
+
+message TdwSource {
+  repeated string tdw_column = 1;
+  repeated string meta_column = 2;
+  string url = 3;
+}
+
+message HiveSource {
+  map<string, string> mapping = 1;
+  string sql = 2;
+}
+
+message JsonSource {
+  map<string, string> mapping = 1;
+  string path = 2;
+}
+
+message CsvSource {
+  string path = 1;
+  repeated string header = 2;
+  string delimiter = 3;
+}
+
+enum ElementType {
+  VERTEX = 0;
+  EDGE = 1;
+  EMBEDDED_EDGE = 3;
+}
+
+enum TaskType {
+  LOCAL_ONLINE = 0;
+  SPARK_ONLINE = 1;
+  SPARK_OFFLINE = 2;
+}
+
+enum SparkMode {
+  YARN = 0;
+  LOCAL = 1;
+}
+
+message TaskConfig {
+  ElementType type = 1;
+  string graph = 2;
+  string label = 3;
+  DataSource data_source = 4;
+  int32 splits = 5;
+  string hdfs_tmp_path = 6;
+}
+
+message TiKVConfig {
+  string address = 1;
+  int32 split_wait_time = 2;
+}
+
+message LoaderConfig {
+  TaskType task_type = 1;
+  repeated TaskConfig tasks = 2;
+  TiKVConfig tikv = 4;
+  com.tencent.easygraph.graphrpc.proto.EasyGraphConfig easygraph = 5;
+  int32 batchSize = 6;
+  int32 parallelism = 7;
+  SparkMode spark_mode = 8;
+}
+
+message LoadResponse {
+  enum Status {
+    OK = 0;
+    FAIL = 1;
+    RUNNING = 2;
+  }
+  Status status = 1;
+  string job_id = 2;
+  string message = 3;
+}
+

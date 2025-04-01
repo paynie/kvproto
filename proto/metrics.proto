@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package com.tencent.easygraph.proto;
+option java_multiple_files = true;
+
+enum MetricType {
+  COUNTER = 0;
+  SUMMERY = 1;
+  HISTOGRAM = 2;
+  GAUGE = 3;
+  MAX_LATENCY = 4;
+}
+
+message MetricDescriptor {
+  string name = 1;
+  string help = 2;
+  MetricType type = 3;
+}

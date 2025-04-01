@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package com.tencent.easygraph.proto;
+import "load.proto";
+
+option java_multiple_files = true;
+
+message AuthHeader{
+  string user = 1;
+  string password = 2;
+}
+
+message UploadRequest {
+  AuthHeader header = 1;
+  string file_name = 2;
+  bytes buffer = 3;
+}
+
+message UploadResponse {
+  bool ok = 1;
+}
+
+message ImportRequest {
+  AuthHeader header = 1;
+  com.tencent.easygraph.proto.TaskConfig task = 2;
+}
+
+message ImportResponse {
+  bool ok = 1;
+  string message = 2;
+}
+
+message ShowTaskRequest {
+  AuthHeader header = 1;
+}
+
+message ShowTaskResponse {
+  double progress = 1;
+  string message = 2;
+}
+
+message LsRequest {
+  AuthHeader header = 1;
+}
+
+message LsResponse {
+  repeated string files = 1;
+}
+
+message RmRequest {
+  AuthHeader header = 1;
+  string file = 2;
+}
+
+message RmResponse {
+  bool ok = 1;
+  string message = 2;
+}
+
+service ImportRpcService {
+
+  rpc doUpload(stream UploadRequest) returns (stream UploadResponse);
+
+  rpc doImport(ImportRequest) returns (ImportResponse);
+
+  rpc show(ShowTaskRequest) returns (stream ShowTaskResponse);
+
+  rpc ls(LsRequest) returns (LsResponse);
+
+  rpc rm(RmRequest) returns (RmResponse);
+}
