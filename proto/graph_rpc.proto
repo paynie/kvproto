@@ -1,0 +1,178 @@
+syntax = "proto3";
+
+import "meta.proto";
+package com.tencent.easygraph.graphrpc.proto;
+
+option java_multiple_files = true;
+
+message EasyGraphConfig {
+  string address = 1;
+  string user = 2;
+  string password = 3;
+}
+
+message KeyValue {
+  bytes key = 1;
+  bytes value = 2;
+}
+
+message FrontVertex {
+  string label = 2;
+  string id = 3;
+  map<string, string> properties = 4;
+  KeyValue kv = 5;
+}
+
+message FrontEdge {
+  string label = 2;
+  string srcId = 3;
+  string dstId = 4;
+  int32 direction = 5;
+  map<string, string> properties = 6;
+  KeyValue kv = 7;
+}
+
+message AddVertexRequest{
+  string graph = 1;
+  repeated FrontVertex batch = 2;
+}
+
+message AddVertexResponse{
+  int32 code = 1;
+  string message = 2;
+}
+
+message DropVertexRequest{
+  string graph = 1;
+  repeated FrontVertex batch = 2;
+}
+
+message DropVertexResponse{
+  int32 code = 1;
+  string message = 2;
+}
+
+message AddEdgeRequest{
+  string graph = 1;
+  repeated FrontEdge batch = 2;
+}
+
+message AddEdgeResponse{
+  int32 code = 1;
+  string message = 2;
+}
+
+message DropEdgeRequest{
+  string graph = 1;
+  repeated FrontEdge batch = 2;
+}
+
+message DropEdgeResponse{
+  int32 code = 1;
+  string message = 2;
+}
+
+message UpsertEdgeRequest{
+  string graph = 1;
+  repeated FrontEdge batch = 2;
+}
+
+message UpsertEdgeResponse{
+  int32 code = 1;
+  string message = 2;
+}
+
+message UpsertVertexRequest{
+  string graph = 1;
+  repeated FrontVertex batch = 2;
+}
+
+message UpsertVertexResponse{
+  int32 code = 1;
+  string message = 2;
+}
+
+message GetGraphMetaRequest {
+  string name = 1;
+}
+
+message GetGraphMetaResponse {
+  int32 code = 1;
+  com.tencent.easygraph.proto.GraphMeta meta = 2;
+}
+
+message AuthRequest {
+  string name = 1;
+}
+
+message AuthResponse {
+  bool success = 1;
+}
+
+message TaskRequest{
+  string graph = 1;
+  string task = 2;
+  string clazz = 3;
+}
+
+message TaskResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetFullGraphRequestProto {
+  string vertexId = 1;
+  repeated StepConfigProto steps = 2;
+  string filterName = 3;
+  string filterDef = 4;
+  int32 resultLimit = 5;
+  int32 execeptResultLimit = 6;
+  bool pushDownFilter = 7;
+  string graphName = 8;
+}
+
+message GetFullGraphResponseProto {
+  int32 code = 1;
+  repeated FrontVertex vertices = 2;
+  repeated FrontEdge edges = 3;
+}
+
+message StepConfigProto {
+  repeated LabelConfigProto labelConfigs = 1;
+  int32 direction = 2;
+  int32 limit = 3;
+  bool distinctHint = 4;
+}
+
+message LabelConfigProto {
+  string labelName = 1;
+  int32 direction = 2;
+  int32 limit = 3;
+  bool distinctHint = 4;
+}
+
+message SampleRequestProto {
+  string vertexId = 1;
+  repeated StepConfigProto steps = 2;
+  string graphName = 3;
+}
+
+message SampleResponseProto {
+  int32 code = 1;
+  repeated FrontVertex vertices = 2;
+  repeated FrontEdge edges = 3;
+}
+
+service GraphRpcService {
+  rpc addVertex(AddVertexRequest) returns (AddVertexResponse);
+  rpc dropVertex(DropVertexRequest) returns (DropVertexResponse);
+  rpc addEdge(AddEdgeRequest) returns (AddEdgeResponse);
+  rpc dropEdge(DropEdgeRequest) returns (DropEdgeResponse);
+  rpc getGraphMeta(GetGraphMetaRequest) returns (GetGraphMetaResponse);
+  rpc doTask(TaskRequest) returns (TaskResponse);
+  rpc auth(AuthRequest) returns (AuthResponse);
+  rpc getFullGraph(GetFullGraphRequestProto) returns (stream GetFullGraphResponseProto);
+  rpc sample(SampleRequestProto) returns (stream SampleResponseProto);
+  rpc upsertVertex(UpsertVertexRequest) returns (UpsertVertexResponse);
+  rpc upsertEdge(UpsertEdgeRequest) returns (UpsertEdgeResponse);
+}

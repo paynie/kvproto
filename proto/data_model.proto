@@ -1,0 +1,62 @@
+syntax = "proto3";
+import "common.proto";
+package com.tencent.easygraph.model;
+
+message Property {
+  int32 prop_id    = 1;
+  Value prop_value = 2;
+}
+
+message VertexId {
+  bytes vid      = 1;
+  int32 label_id = 2;
+}
+
+message Vertex {
+  bytes vertex_id            = 1;
+  int32 label_id             = 2;
+  repeated Property property = 3;
+}
+
+message EdgeValue {
+  bytes src_id            = 1;
+  repeated bytes dst_id   = 2;
+  repeated Value property = 3;
+}
+
+message OneEdgeValue {
+  bytes dst_id               = 1;
+  repeated Property property = 2;
+}
+
+message EdgeKey {
+  bytes src_id               = 1;
+  int32 direction            = 2;
+  int32 label_id             = 3;
+}
+
+message PartEdgeKey {
+  bytes src_id               = 1;
+  int32 direction            = 2;
+  int32 label_id             = 3;
+  int32 partition_id         = 4;
+  int32 version              = 5;
+}
+
+message EdgeItem {
+  bytes dst_id               = 1;
+  repeated Property property = 2;
+}
+
+message EdgeList {
+  bytes src_id           = 1;
+  repeated EdgeItem edge = 2;
+  int32 partition_num    = 3;
+  int32 version          = 4;
+}
+
+message PartEdgeList {
+  bytes src_id           = 1;
+  repeated EdgeItem edge = 2;
+}
+

@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package com.tencent.easygraph.graph.distribute.proto;
+
+option java_multiple_files = true;
+
+message GetEdgeRequest{
+  bytes vertex = 1;
+  string direction = 2;
+  repeated string labels = 3;
+}
+
+message GetEdgeResponse{
+  bytes edges = 1;
+}
+
+message AddEdgeRequest{
+  bytes edges = 1;
+}
+
+message AddEdgeResponse{
+  bool success = 1;
+}
+
+message DropEdgeRequest{
+  bytes edges = 1;
+}
+
+message DropEdgeResponse{
+  bool success = 1;
+}
+
+service RemoteGraphService {
+
+  rpc getEdges(GetEdgeRequest) returns (GetEdgeResponse);
+
+  rpc addEdges(AddEdgeRequest) returns (AddEdgeResponse);
+
+  rpc dropEdges(DropEdgeRequest) returns (DropEdgeResponse);
+}

@@ -1,0 +1,483 @@
+syntax = "proto3";
+
+package com.tencent.easygraph.proto;
+option java_multiple_files = true;
+
+//common data structure
+message Header {
+  bool success = 1;
+  int32 code = 2;
+  string msg = 3;
+  int64 trace_id = 4;
+}
+
+enum DataType {
+  T_INT = 0;
+  T_LONG = 1;
+  T_DOUBLE = 2;
+  T_FLOAT = 3;
+  T_SHORT = 4;
+  T_STRING = 5;
+}
+
+enum MetaType {
+  Graph = 0;
+  Vertex = 1;
+  Edge = 2;
+  Index = 3;
+  Property = 4;
+}
+
+enum IndexState {
+  ENABLE = 0;
+  READ_ENABLE = 1;
+  WRITE_ENABLE = 2;
+  DISABLE = 3;
+}
+
+enum IndexStateCmd {
+  CMD_ENABLE = 0;
+  CMD_READ_ENABLE = 1;
+  CMD_READ_DISABLE = 2;
+  CMD_WRITE_ENABLE = 3;
+  CMD_WRITE_DISABLE = 4;
+  CMD_DISABLE = 5;
+}
+
+message MetaDesc{
+  MetaType type = 1;
+  string key = 2;
+  bytes meta = 3;
+}
+
+message PropertyMeta {
+  uint32 id = 1;
+  string propertyName = 2;
+  DataType dataType = 3;
+  bytes defaultValue = 4;
+  string comment = 5;
+  string alias = 6;
+  repeated uint32 vertices = 7;
+  repeated uint32 edges = 8;
+  map<string, string> config = 9;
+}
+
+message GraphMeta {
+  uint32 id = 1;
+  string name = 2;
+  int64 create_time = 3;
+  int32 version = 4;
+  uint32 partition_num = 5;
+  string comment = 6;
+  string alias = 7;
+  map<string, PropertyMeta> properties_meta = 8;
+  map<string, VertexMeta> vertices_meta = 9;
+  map<string, EdgeMeta> edges_meta = 10;
+  map<string, string> config = 11;
+}
+
+message VertexMeta {
+  uint32 id = 1;
+  string name = 2;
+  string primary_key = 3;
+  int64 create_time = 4;
+  string comment = 5;
+  string alias = 6;
+  repeated uint32 properties = 7;
+  repeated uint32 edges = 8;
+  map<string, string> config = 9;
+  map<string, IndexMeta> indices = 10;
+}
+
+message EdgeMeta {
+  uint32 id = 1;
+  string name = 2;
+  uint32 src_label_id = 3;
+  uint32 dst_label_id = 4;
+  int64 create_time = 5;
+  string comment = 7;
+  string alias = 8;
+  repeated uint32 properties = 9;
+  map<string, string> config = 10;
+  map<string, IndexMeta> indices = 11;
+}
+
+message IndexMeta {
+  uint32 id = 1;
+  string name = 2;
+  repeated string properties = 3;
+  int64 create_time = 4;
+  map<string, string> config = 5;
+}
+
+//Graph RPC
+message CreateGraphRequest {
+  string name = 1;
+  uint32 partition_num = 2;
+}
+
+message CreateGraphResponse {
+  Header header = 1;
+  GraphMeta meta = 2;
+}
+
+message DropGraphMetaRequest {
+  string name = 1;
+}
+
+message DropGraphMetaResponse {
+  Header header = 1;
+}
+
+message GetGraphMetaRequest {
+  string name = 1;
+}
+
+message GetGraphMetaResponse {
+  Header header = 1;
+  GraphMeta meta = 2;
+}
+
+message GetAllGraphMetaRequest {
+}
+
+message GetAllGraphMetaResponse {
+  Header header = 1;
+  repeated GraphMeta meta = 2;
+}
+
+//Property RPC
+message CreatePropertyRequest{
+  string graphName = 1;
+  string propertyName = 2;
+  DataType dataType = 3;
+  bytes defaultValue = 4;
+}
+
+message CreatePropertyResponse {
+  Header header = 1;
+  PropertyMeta meta = 2;
+}
+
+message DropPropertyMetaRequest {
+  string graphName = 1;
+  string propertyName = 2;
+  int64 trace_id = 3;
+}
+
+message DropPropertyMetaResponse {
+  Header header = 1;
+}
+
+message UpdatePropertyMetaRequest {
+  string graphName = 1;
+  string propertyName = 2;
+  bytes defaultValue = 4;
+}
+
+message UpdatePropertyMetaResponse {
+  Header header = 1;
+}
+
+//Vertex RPC
+message CreateVertexRequest{
+  string graphName = 1;
+  string vertexName = 2;
+  string primary_key = 3;
+  repeated string properties = 4;
+  int64 trace_id = 5;
+}
+
+message CreateVertexResponse {
+  Header header = 1;
+  VertexMeta meta = 2;
+}
+
+message DropVertexMetaRequest {
+  string graphName = 1;
+  string vertexName = 2;
+  int64 trace_id = 3;
+}
+
+message DropVertexMetaResponse {
+  Header header = 1;
+}
+
+message UpdateVertexMetaRequest {
+  string graphName = 1;
+  string vertexName = 2;
+  repeated string properties = 3;
+  int64 trace_id = 4;
+}
+
+message UpdateVertexMetaResponse {
+  Header header = 1;
+}
+
+//Edge RPC
+message CreateEdgeRequest{
+  string graphName = 1;
+  string edgeName = 2;
+  string subject = 3;
+  string object = 4;
+  repeated string properties = 5;
+  int64 trace_id = 6;
+}
+
+message CreateEdgeResponse {
+  Header header = 1;
+  EdgeMeta meta = 2;
+}
+
+message DropEdgeMetaRequest {
+  string graphName = 1;
+  string edgeName = 2;
+  int64 trace_id = 3;
+}
+
+message DropEdgeMetaResponse {
+  Header header = 1;
+}
+
+message UpdateEdgeMetaRequest {
+  string graphName = 1;
+  string edgeName = 2;
+  repeated string properties = 3;
+  int64 trace_id = 4;
+}
+
+message UpdateEdgeMetaResponse {
+  Header header = 1;
+}
+
+message UpdateConfigRequest {
+  string graphName = 1;
+  MetaType MetaType = 2;
+  string name = 3;
+  string key = 4;
+  string value = 5;
+}
+
+message UpdateConfigResponse {
+  Header header = 1;
+}
+
+message UpdateAliasRequest {
+  string graphName = 1;
+  MetaType MetaType = 2;
+  string name = 3;
+  string value = 4;
+}
+
+message UpdateAliasResponse {
+  Header header = 1;
+}
+
+message UpdateCommentRequest {
+  string graphName = 1;
+  MetaType MetaType = 2;
+  string name = 3;
+  string value = 4;
+}
+
+message UpdateCommentResponse {
+  Header header = 1;
+}
+
+message CreateIndexRequest {
+  string graphName = 1;
+  string label = 2;
+  MetaType MetaType = 3;
+  string name = 4;
+  repeated string properties = 5;
+  map<string, string> config = 6;
+}
+
+message CreateIndexResponse {
+  Header header = 1;
+  IndexMeta index = 2;
+}
+
+message DropIndexRequest {
+  string graphName = 1;
+  string label = 2;
+  MetaType MetaType = 3;
+  string name = 4;
+}
+
+message DropIndexResponse {
+  Header header = 1;
+}
+
+message SetIndexStateRequest {
+  string graphName = 1;
+  string label = 2;
+  MetaType MetaType = 3;
+  string name = 4;
+  IndexStateCmd cmd = 5;
+}
+
+message SetIndexStateResponse {
+  Header header = 1;
+  IndexMeta index = 2;
+}
+
+message SetLabelIndexStateRequest {
+  string graphName = 1;
+  string label = 2;
+  MetaType MetaType = 3;
+  IndexStateCmd cmd = 4;
+  bool recursion = 5;
+}
+
+message SetLabelIndexStateResponse {
+  Header header = 1;
+  IndexState state = 2;
+}
+
+message SetGraphIndexStateRequest {
+  string graphName = 1;
+  IndexStateCmd cmd = 2;
+  bool recursion = 3;
+}
+
+message SetGraphIndexStateResponse {
+  Header header = 1;
+  IndexState state = 2;
+}
+
+
+//Sync Meta RPC
+message VersionRecord{
+  string graph = 1;
+  int32 version = 2;
+}
+
+message DiffVersionRequest{
+  repeated VersionRecord versions = 1;
+}
+
+message DiffVersionResponse{
+  Header header = 1;
+  repeated VersionRecord versions = 2;
+}
+
+message DoSnapshotGraphRequest {
+  string snapshot_name = 1;
+  string graph_name = 2;
+}
+
+message DoSnapshotGraphResponse {
+  Header header = 1;
+  GraphMeta meta = 2;
+}
+
+message GetSnapshotGraphRequest {
+  string snapshot_name = 1;
+  string graph_name = 2;
+}
+
+message GetSnapshotGraphResponse {
+  Header header = 1;
+  GraphMeta meta = 2;
+}
+
+message ListSnapshotGraphRequest {
+  string graph_name = 2;
+}
+
+message ListSnapshotGraphResponse {
+  Header header = 1;
+  repeated string snapshot_name = 2;
+}
+
+message RestoreSnapshotGraphRequest {
+  string snapshot_name = 1;
+  string graph_name = 2;
+}
+
+message RestoreSnapshotGraphResponse {
+  Header header = 1;
+  GraphMeta meta = 2;
+}
+
+message HealthCheckRequest {
+}
+
+message HealthCheckResponse {
+  Header header = 1;
+}
+
+message IDRange {
+  int64 from = 2;
+  int32 delta = 3;
+}
+
+message AllocateIDRequest {
+  string graphName = 1;
+  int32 delta = 2;
+}
+
+message AllocateIDResponse {
+  Header header = 1;
+  IDRange range = 2;
+}
+
+service MetaRpcService {
+
+  rpc createGraphMeta(CreateGraphRequest) returns (CreateGraphResponse);
+
+  rpc dropGraphMeta(DropGraphMetaRequest) returns (DropGraphMetaResponse);
+
+  rpc getGraphMeta(GetGraphMetaRequest) returns (GetGraphMetaResponse);
+
+  rpc getAllGraphMeta(GetAllGraphMetaRequest) returns (GetAllGraphMetaResponse);
+
+  rpc createPropertyMeta(CreatePropertyRequest) returns (CreatePropertyResponse);
+
+  rpc dropPropertyMeta(DropPropertyMetaRequest) returns (DropPropertyMetaResponse);
+
+  rpc updatePropertyMeta(UpdatePropertyMetaRequest) returns (UpdatePropertyMetaResponse);
+
+  rpc createVertexMeta(CreateVertexRequest) returns (CreateVertexResponse);
+
+  rpc dropVertexMeta(DropVertexMetaRequest) returns (DropVertexMetaResponse);
+
+  rpc updateVertexMeta(UpdateVertexMetaRequest) returns (UpdateVertexMetaResponse);
+
+  rpc createEdgeMeta(CreateEdgeRequest) returns (CreateEdgeResponse);
+
+  rpc dropEdgeMeta(DropEdgeMetaRequest) returns (DropEdgeMetaResponse);
+
+  rpc updateEdgeMeta(UpdateEdgeMetaRequest) returns (UpdateEdgeMetaResponse);
+
+  rpc updateConfig(UpdateConfigRequest) returns (UpdateConfigResponse);
+
+  rpc updateAlias(UpdateAliasRequest) returns (UpdateAliasResponse);
+
+  rpc updateComment(UpdateCommentRequest) returns (UpdateCommentResponse);
+
+  rpc createIndex(CreateIndexRequest) returns (CreateIndexResponse);
+
+  rpc dropIndex(DropIndexRequest) returns (DropIndexResponse);
+
+  rpc setGraphIndexState(SetGraphIndexStateRequest) returns (SetGraphIndexStateResponse);
+
+  rpc setLabelIndexState(SetLabelIndexStateRequest) returns (SetLabelIndexStateResponse);
+
+  rpc setIndexState(SetIndexStateRequest) returns (SetIndexStateResponse);
+
+  rpc diffVersion(DiffVersionRequest) returns (DiffVersionResponse);
+
+  rpc doSnapshot(DoSnapshotGraphRequest) returns (DoSnapshotGraphResponse);
+
+  rpc getSnapshot(GetSnapshotGraphRequest) returns (GetSnapshotGraphResponse);
+
+  rpc listSnapshot(ListSnapshotGraphRequest) returns (ListSnapshotGraphResponse);
+
+  rpc restoreSnapshot(RestoreSnapshotGraphRequest) returns (RestoreSnapshotGraphResponse);
+
+  rpc healthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+
+  rpc allocate(AllocateIDRequest) returns (AllocateIDResponse);
+}
